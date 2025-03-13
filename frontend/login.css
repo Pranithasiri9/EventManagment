@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #e6ccff, #d9b3ff); /* Light Purple Background */
+}
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 350px;
+}
+h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+.input-group {
+    margin: 10px 0;
+    text-align: left;
+}
+.input-group label {
+    font-size: 14px;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+    background: #fff;
+    color: #333;
+}
+.input-group input:focus, .input-group select:focus {
+    border-color: #999;
+}
+.btn {
+    width: 100%;
+    padding: 10px;
+    background: #8c52ff; /* Purple Button */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn:hover {
+    background: #7a42f4;
+}
+.switch-link {
+    margin-top: 10px;
+    font-size: 14px;
+}
+.switch-link a {
+    color: #333;
+    text-decoration: none;
+}
+.switch-link a:hover {
+    text-decoration: underline;
+}
+.hidden {
+    display: none;
+}
+
+/* ✅ Success Message Style */
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}

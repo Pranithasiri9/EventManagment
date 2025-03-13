@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Connect | Login & Sign Up</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <div id="loginForm">
+            <h2>Login to College Connect</h2>
+            <form>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                <div class="input-group">
+                    <label for="role">Select Role</label>
+                    <select id="role" required>
+                        <option value="admin">Admin</option>
+                        <option value="event-organizer">Event Organizer</option>
+                        <option value="attendee">Attendee</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p class="switch-link">Don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
+        </div>
+        
+        <div id="signupForm" class="hidden">
+            <h2>Sign Up for College Connect</h2>
+            <form>
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+                <div class="input-group">
+                    <label for="email-signup">Email</label>
+                    <input type="email" id="email-signup" placeholder="Enter your email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password-signup">Password</label>
+                    <input type="password" id="password-signup" placeholder="Create a password" required>
+                </div>
+                <div class="input-group">
+                    <label for="role-signup">Select Role</label>
+                    <select id="role-signup" required>
+                        <option value="admin">Admin</option>
+                        <option value="event-organizer">Event Organizer</option>
+                        <option value="attendee">Attendee</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <p class="switch-link">Already have an account? <a href="#" onclick="toggleForm()">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            let loginForm = document.getElementById("loginForm");
+            let signupForm = document.getElementById("signupForm");
+    
+            if (loginForm.classList.contains("hidden")) {
+                loginForm.classList.remove("hidden");
+                signupForm.classList.add("hidden");
+            } else {
+                loginForm.classList.add("hidden");
+                signupForm.classList.remove("hidden");
+            }
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector("#signupForm form").addEventListener("submit", async function (e) {
+                e.preventDefault(); // Prevent default form submission
+    
+                // Get user inputs
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email-signup").value;
+                const password = document.getElementById("password-signup").value;
+                const role = document.getElementById("role-signup").value;
+    
+                // Send data to backend
+                const response = await fetch("http://localhost:3000/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, password, role }),
+                });
+    
+                const data = await response.json();
+    
+                // Display success message
+                const messageDiv = document.createElement("p");
+                messageDiv.textContent = data.message;
+                messageDiv.style.color = "green";
+                messageDiv.style.fontWeight = "bold";
+                messageDiv.style.marginTop = "10px";
+    
+                document.getElementById("signupForm").appendChild(messageDiv);
+            });
+        });
+    </script>
+    
+</body>
+</html>
