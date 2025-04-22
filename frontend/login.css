@@ -1,83 +1,72 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
 body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e6ccff;  /* Light Purple Background */
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #e6ccff, #d9b3ff); /* Light Purple Background */
 }
+
 .container {
-    background: #fff;
-    padding: 2rem;
+    width: 500px;  /* Increased width */
+    background-color: #fff;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 60px;  /* Increased padding */
     text-align: center;
-    width: 350px;
 }
+
 h2 {
-    margin-bottom: 1rem;
-    color: #333;
+    font-size: 32px;  /* Increased font size for header */
+    margin-bottom: 40px;  /* Increased margin for spacing */
 }
-.input-group {
-    margin: 10px 0;
-    text-align: left;
-}
-.input-group label {
-    font-size: 14px;
-    color: #333;
-    display: block;
-    margin-bottom: 5px;
-}
-.input-group input, .input-group select {
+
+input,
+select {
     width: 100%;
-    padding: 10px;
+    padding: 18px;  /* Increased padding for larger input fields */
+    font-size: 18px;  /* Increased font size */
+    margin: 15px 0;  /* Increased margin for better spacing */
     border: 1px solid #ccc;
-    border-radius: 6px;
-    outline: none;
-    transition: 0.3s;
-    background: #fff;
-    color: #333;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
-.input-group input:focus, .input-group select:focus {
-    border-color: #999;
-}
-.btn {
+
+button {
     width: 100%;
-    padding: 10px;
-    background: #8c52ff; /* Purple Button */
-    color: #fff;
+    padding: 18px;  /* Increased padding for the button */
+    background-color: #4CAF50;
+    color: white;
+    font-size: 20px;  /* Increased font size */
     border: none;
-    border-radius: 6px;
-    font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
 }
-.btn:hover {
-    background: #7a42f4;
+
+button:hover {
+    background-color: #45a049;
 }
+
 .switch-link {
-    margin-top: 10px;
-    font-size: 14px;
+    font-size: 18px;  /* Increased font size for the link */
 }
+
 .switch-link a {
-    color: #333;
+    color: #007bff;
     text-decoration: none;
 }
+
 .switch-link a:hover {
     text-decoration: underline;
 }
+
 .hidden {
     display: none;
 }
 
-/* ✅ Success Message Style */
-.success-message {
-    color: green;
-    font-weight: bold;
-    margin-top: 10px;
+#loginMessage,
+#signupMessage {
+    color: red;
+    font-size: 18px;  /* Increased font size for messages */
 }

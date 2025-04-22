@@ -3,47 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title>Login | College Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <h2>Login to College Connect</h2>
-    <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required><br>
-        <input type="password" id="password" placeholder="Password" required><br>
-        <select id="role" required>
-            <option value="">Select Role</option>
-            <option value="attendee">Attendee</option>
-            <option value="admin">Admin</option>
-        </select><br>
-        <button type="submit">Login</button>
-    </form>
+    <div class="container">
+        <!-- Login Form -->
+        <div id="loginFormBox">
+            <h2>Login to College Connect</h2>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email" required><br>
+                <input type="password" id="password" placeholder="Password" required><br>
+                <select id="role" required>
+                    <option value="">Select Role</option>
+                    <option value="attendee">Attendee</option>
+                    <option value="admin">Admin</option>
+                </select><br>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p id="loginMessage"></p>
+            <p class="switch-link">Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
+        </div>
 
-    <p id="message"></p>
+        <!-- Sign-Up Form -->
+        <div id="signupFormBox" class="hidden">
+            <h2>Register</h2>
+            <form id="signupForm">
+                <input type="text" id="signupName" placeholder="Name" required><br>
+                <input type="email" id="signupEmail" placeholder="Email" required><br>
+                <input type="password" id="signupPassword" placeholder="Password" required><br>
+                <select id="signupRole" required>
+                    <option value="">Select Role</option>
+                    <option value="attendee">Attendee</option>
+                    <option value="admin">Admin</option>
+                </select><br>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p id="signupMessage"></p>
+            <p class="switch-link">Already have an account? <a href="#" id="showLogin">Login</a></p>
+        </div>
+
+    </div>
 
     <script>
+        document.getElementById('showSignup').addEventListener('click', () => {
+            document.getElementById('loginFormBox').classList.add('hidden');
+            document.getElementById('signupFormBox').classList.remove('hidden');
+        });
+
+        document.getElementById('showLogin').addEventListener('click', () => {
+            document.getElementById('signupFormBox').classList.add('hidden');
+            document.getElementById('loginFormBox').classList.remove('hidden');
+        });
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const role = document.getElementById('role').value;
 
-            try {
-                const res = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, role })
-                });
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role })
+            });
 
-                const data = await res.json();
-                document.getElementById('message').textContent = data.message;
+            const data = await response.json();
+            document.getElementById('loginMessage').innerText = data.message;
 
-                if (res.ok && data.redirect) {
-                    window.location.href = data.redirect;
-                }
-            } catch (err) {
-                console.error('Login error:', err);
-                document.getElementById('message').textContent = 'Error during login';
+            if (response.ok) {
+                window.location.href = data.redirect || '/dashboard';
+            }
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const role = document.getElementById('signupRole').value;
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, role })
+            });
+
+            const data = await response.json();
+            document.getElementById('signupMessage').innerText = data.message;
+
+            if (response.ok) {
+                alert('Registered successfully');
+                document.getElementById('signupForm').reset();
             }
         });
     </script>
