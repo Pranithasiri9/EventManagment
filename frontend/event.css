@@ -1,0 +1,165 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f3e5f5; /* Light purple background */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(149, 117, 205, 0.2); /* Purple tinted shadow */
+}
+
+h1 {
+    color: #6a1b9a; /* Dark purple heading */
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+h2, h3 {
+    color: #7b1fa2; /* Medium purple subheadings */
+    border-bottom: 2px solid #e1bee7; /* Light purple underline */
+    padding-bottom: 8px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ce93d8; /* Purple border */
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #faf5ff; /* Very light purple background */
+    resize: vertical;
+}
+
+button {
+    background-color: #9c27b0; /* Purple button */
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button:hover {
+    background-color: #7b1fa2; /* Darker purple on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+input[type="text"],
+input[type="url"],
+input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ce93d8; /* Purple border */
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #faf5ff; /* Very light purple background */
+}
+
+.hidden {
+    display: none;
+}
+
+.output {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.error {
+    background-color: #ffebee; /* Light red error background */
+    color: #c62828; /* Dark red error text */
+    border-left: 5px solid #c62828;
+}
+
+.success {
+    background-color: #e8f5e9; /* Light green success background */
+    color: #2e7d32; /* Dark green success text */
+    border-left: 5px solid #2e7d32;
+}
+
+#events-list {
+    margin-top: 40px;
+    background-color: #faf5ff; /* Very light purple background */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 10px rgba(149, 117, 205, 0.1);
+}
+
+.event-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #9c27b0; /* Purple accent border */
+    box-shadow: 0 2px 8px rgba(149, 117, 205, 0.1);
+    transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(149, 117, 205, 0.2);
+}
+
+.event-card h3 {
+    color: #7b1fa2; /* Purple heading */
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    color: #555;
+    margin: 8px 0;
+}
+
+.event-card a {
+    display: inline-block;
+    margin-top: 12px;
+    color: #9c27b0; /* Purple link */
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #f3e5f5; /* Light purple background */
+    transition: all 0.3s ease;
+}
+
+.event-card a:hover {
+    background-color: #e1bee7; /* Medium purple background on hover */
+    text-decoration: none;
+}
+
+/* Form styling */
+#new-event-form {
+    background-color: #faf5ff; /* Very light purple background */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+    
+    button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

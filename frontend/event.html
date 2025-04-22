@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Manager</title>
+    <link rel="stylesheet" href="event.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="event-heading">Event</h1>
+
+        <section>
+            <h2>About</h2>
+            <textarea id="event-description" placeholder="Write a description here..."></textarea>
+            <button id="update-description-btn">Update Description</button>
+            <button id="add-event-btn">+ Add Event</button>
+        </section>
+
+        <section id="event-form" class="hidden">
+            <h3>Add Event</h3>
+            <form id="new-event-form">
+                <input type="text" id="event-name" placeholder="Event Name" required />
+                <input type="url" id="registration-link" placeholder="Registration Link" required />
+                <input type="date" id="event-date" required />
+                <button type="submit">Submit Event</button>
+            </form>
+        </section>
+
+        <div id="output" class="output"></div>
+        
+        <section id="events-list">
+            <h2>Upcoming Events</h2>
+            <div id="events-container"></div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventType = urlParams.get('type'); // Should be 'sports'
+            const sportId = urlParams.get('id');
+            const sportName = decodeURIComponent(urlParams.get('name') || 'Event');
+
+            const heading = document.getElementById('event-heading');
+            const eventDescription = document.getElementById('event-description');
+            const updateDescriptionBtn = document.getElementById('update-description-btn');
+            const addEventBtn = document.getElementById('add-event-btn');
+            const eventForm = document.getElementById('event-form');
+            const newEventForm = document.getElementById('new-event-form');
+            const output = document.getElementById('output');
+            const eventsContainer = document.getElementById('events-container');
+
+            // Log query parameters for debugging
+            console.log('Query params:', { eventType, sportId, sportName });
+
+            // Set the heading dynamically
+            heading.textContent = sportName;
+
+            // Base URL for API requests
+            const API_BASE_URL = 'http://localhost:3000';
+
+            // Load description and events on page load
+            const loadPageData = async () => {
+                if (!sportId || !sportName) {
+                    output.textContent = 'Missing sport ID or name in URL parameters.';
+                    output.classList.add('error');
+                    return;
+                }
+                try {
+                    // Load description
+                    const descUrl = `${API_BASE_URL}/api/sports/${sportId}/description?name=${encodeURIComponent(sportName)}`;
+                    console.log('Fetching description from:', descUrl);
+                    const descRes = await fetch(descUrl);
+                    if (!descRes-ok) throw new Error(`Description fetch failed: ${descRes.status} ${descRes.statusText}`);
+                    const descData = await descRes.json();
+                    eventDescription.value = descData.description || 'No description available';
+
+                    // Load events
+                    const eventsUrl = `${API_BASE_URL}/api/sports/${sportId}/events?name=${encodeURIComponent(sportName)}`;
+                    console.log('Fetching events from:', eventsUrl);
+                    const eventsRes = await fetch(eventsUrl);
+                    if (!eventsRes.ok) throw new Error(`Events fetch failed: ${eventsRes.status} ${eventsRes.statusText}`);
+                    const eventsData = await eventsRes.json();
+                    displayEvents(eventsData);
+                } catch (err) {
+                    console.error('Error loading page data:', err);
+                    output.textContent = `Error loading page data: ${err.message}`;
+                    output.classList.add('error');
+                }
+            };
+
+            // Display events function
+            const displayEvents = (events) => {
+                if (!events || events.length === 0) {
+                    eventsContainer.innerHTML = '<p>No upcoming events.</p>';
+                    return;
+                }
+
+                eventsContainer.innerHTML = events.map(event => `
+                    <div class="event-card">
+                        <h3>${event.event_name}</h3>
+                        <p><strong>Date:</strong> ${new Date(event.date).toLocaleDateString()}</p>
+                        <a href="${event.registration_link}" target="_blank">Register Here</a>
+                    </div>
+                `).join('');
+            };
+
+            loadPageData();
+
+            // Show event form when "+ Add Event" is clicked
+            addEventBtn.addEventListener('click', () => {
+                eventForm.classList.remove('hidden');
+            });
+
+            // Handle description update
+            updateDescriptionBtn.addEventListener('click', async () => {
+                if (!sportId) {
+                    output.textContent = 'Missing sport ID.';
+                    output.classList.add('error');
+                    return;
+                }
+                const newDescription = eventDescription.value;
+                if (!newDescription.trim()) {
+                    output.textContent = 'Description cannot be empty!';
+                    output.classList.add('error');
+                    return;
+                }
+
+                try {
+                    const updateUrl = `${API_BASE_URL}/api/sports/${sportId}/update-description?name=${encodeURIComponent(sportName)}`;
+                    console.log('Updating description at:', updateUrl, 'with body:', { description: newDescription });
+                    const res = await fetch(updateUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ description: newDescription })
+                    });
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        throw new Error(`Update description failed: ${res.status} ${res.statusText} - ${errorText}`);
+                    }
+                    const data = await res.json();
+                    output.textContent = data.message || 'Description updated successfully!';
+                    output.classList.remove('error');
+                    output.classList.add('success');
+                } catch (err) {
+                    console.error('Error updating description:', err);
+                    output.textContent = `Error updating description: ${err.message}`;
+                    output.classList.add('error');
+                }
+            });
+
+            // Submit new event
+            newEventForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!sportId) {
+                    output.textContent = 'Missing sport ID.';
+                    output.classList.add('error');
+                    return;
+                }
+
+                const eventName = document.getElementById('event-name').value;
+                const registrationLink = document.getElementById('registration-link').value;
+                const date = document.getElementById('event-date').value;
+
+                if (!eventName.trim() || !registrationLink.trim() || !date) {
+                    output.textContent = 'Please fill in all fields!';
+                    output.classList.add('error');
+                    return;
+                }
+
+                try {
+                    const addEventUrl = `${API_BASE_URL}/api/sports/${sportId}/events/add`;
+                    console.log('Adding event at:', addEventUrl, 'with body:', { eventName, registrationLink, date, sportName });
+                    const res = await fetch(addEventUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            eventName, 
+                            registrationLink, 
+                            date,
+                            sportName 
+                        })
+                    });
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        throw new Error(`Event creation failed: ${res.status} ${res.statusText} - ${errorText}`);
+                    }
+                    const data = await res.json();
+                    if (data.success) {
+                        output.textContent = 'Successfully event registered!';
+                        output.classList.remove('error');
+                        output.classList.add('success');
+                        newEventForm.reset();
+                        eventForm.classList.add('hidden');
+                        loadPageData(); // Refresh events list
+                    } else {
+                        throw new Error(data.message || 'Error creating event');
+                    }
+                } catch (err) {
+                    console.error('Error creating event:', err);
+                    output.textContent = `Error creating event: ${err.message}`;
+                    output.classList.add('error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

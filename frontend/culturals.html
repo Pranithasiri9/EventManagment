@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Events</title>
+    <link rel="stylesheet" href="sports.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sports-container">
+        <header>
+            <h1>Cultural Events</h1>
+            <a href="dash.html" class="back-btn">← Back to Dashboard</a>
+        </header>
+
+        <div class="content">
+            <div id="loading" class="loading-spinner"></div>
+            
+            <div id="culturals-list" class="sports-grid">
+                <!-- Cultural events will be dynamically inserted here -->
+            </div>
+
+            <div id="error-message" class="error-message hidden">
+                Failed to load cultural events. Please try again later.
+            </div>
+
+            <div id="no-data" class="no-data hidden">
+                No cultural events available at the moment.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const culturalsList = document.getElementById('culturals-list');
+            const loading = document.getElementById('loading');
+            const errorMsg = document.getElementById('error-message');
+            const noDataMsg = document.getElementById('no-data');
+
+            // Reset UI states
+            loading.style.display = 'block';
+            culturalsList.innerHTML = '';
+            errorMsg.classList.add('hidden');
+            noDataMsg.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/culturals');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.culturals && data.culturals.length > 0) {
+                        data.culturals.forEach(event => {
+                            const eventCard = document.createElement('div');
+                            eventCard.className = 'sport-card';
+                            eventCard.innerHTML = `<h3>${event.name}</h3>`;
+                            culturalsList.appendChild(eventCard);
+                        });
+                    } else {
+                        noDataMsg.classList.remove('hidden');
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to load cultural events');
+                }
+            } catch (error) {
+                console.error('Error loading cultural events:', error);
+                errorMsg.textContent = error.message;
+                errorMsg.classList.remove('hidden');
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

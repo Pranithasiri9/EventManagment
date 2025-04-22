@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Events</title>
+    <link rel="stylesheet" href="sports.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sports-container">
+        <header>
+            <h1>Sports Events</h1>
+            <a href="dash.html" class="back-btn">← Back to Dashboard</a>
+        </header>
+
+        <div class="content">
+            <div id="loading" class="loading-spinner"></div>
+
+            <div id="sports-list" class="sports-grid">
+                </div>
+
+            <div id="error-message" class="error-message hidden">
+                Failed to load sports. Please try again later.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const sportsList = document.getElementById('sports-list');
+            const loading = document.getElementById('loading');
+            const errorMsg = document.getElementById('error-message');
+
+            try {
+                // Show loading spinner
+                loading.style.display = 'block';
+                sportsList.innerHTML = '';
+
+                // Fetch sports data from your API
+                const response = await fetch('/api/sports');
+                const data = await response.json();
+
+                if (data.success && data.sports.length > 0) {
+                    // Display each sport as a card with link to event.html
+                    data.sports.forEach(sport => {
+                        const sportCard = document.createElement('div');
+                        sportCard.className = 'sport-card';
+                        sportCard.onclick = () => {
+                            window.location.href = `event.html?type=sports&id=${sport.id}&name=${encodeURIComponent(sport.name)}`;
+                        };
+                        sportCard.innerHTML = `
+                            <h3>${sport.name}</h3>
+                        `;
+                        sportsList.appendChild(sportCard);
+                    });
+                } else {
+                    throw new Error('No sports found');
+                }
+            } catch (error) {
+                console.error('Error loading sports:', error);
+                errorMsg.classList.remove('hidden');
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

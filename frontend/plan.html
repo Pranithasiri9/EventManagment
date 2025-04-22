@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Connect | Login & Sign Up</title>
+    <link rel="stylesheet" href="/plan.css">
+    <script>
+        function toggleForm() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('signupForm').classList.toggle('hidden');
+            document.getElementById('message').textContent = '';
+            // Clear form fields when toggling
+            document.getElementById('loginForm').reset();
+            document.getElementById('signupForm').reset();
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('club-email').value.trim();
+            const password = document.getElementById('club-password').value;
+            const category = document.getElementById('category').value;
+
+            const message = document.getElementById('message');
+            message.textContent = '';
+            
+            if (!email || !password || !category) {
+                message.textContent = '❌ Please fill all fields.';
+                message.style.color = 'red';
+                return;
+            }
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, category }),
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    message.textContent = '✅ Login Successful! Redirecting...';
+                    message.style.color = 'green';
+                    // Redirect to dashboard after successful login
+                    setTimeout(() => {
+                        window.location.href = '/dash.html';
+                    }, 1500);
+                } else {
+                    message.textContent = `❌ ${result.error || result.message || 'Login failed'}`;
+                    message.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                message.textContent = '❌ Network error. Please try again.';
+                message.style.color = 'red';
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email-signup').value.trim();
+            const password = document.getElementById('password-signup').value;
+            const category = document.getElementById('signup-category').value;
+
+            const message = document.getElementById('message');
+            message.textContent = '';
+            
+            if (!name || !email || !password || !category) {
+                message.textContent = '❌ Please fill all fields.';
+                message.style.color = 'red';
+                return;
+            }
+
+            if (password.length < 6) {
+                message.textContent = '❌ Password must be at least 6 characters';
+                message.style.color = 'red';
+                return;
+            }
+
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, category }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    message.textContent = '✅ Successfully Registered! Please Login.';
+                    message.style.color = 'green';
+                    // Auto-switch to login form after successful signup
+                    setTimeout(toggleForm, 1500);
+                } else {
+                    message.textContent = `❌ ${result.error || result.message || 'Registration failed'}`;
+                    message.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                message.textContent = '❌ Network error. Please try again.';
+                message.style.color = 'red';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>College Connect</h1>
+        <p id="message" class="message"></p>
+
+        <div id="loginForm">
+            <h2>Login to Plan your Event</h2>
+            <form id="login-form" onsubmit="return handleLogin(event)">
+                <div class="input-group">
+                    <label for="club-email">Club Email</label>
+                    <input type="email" id="club-email" placeholder="Enter your club email" required>
+                </div>
+                <div class="input-group">
+                    <label for="club-password">Password</label>
+                    <input type="password" id="club-password" placeholder="Enter your password" required minlength="6">
+                </div>
+                <div class="input-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Culturals">Cultural</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <p class="switch-link">Don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
+        </div>
+        
+        <div id="signupForm" class="hidden">
+            <h2>Sign Up to Plan your Event</h2>
+            <form id="signup-form" onsubmit="return handleSignup(event)">
+                <div class="input-group">
+                    <label for="name">Club Name</label>
+                    <input type="text" id="name" placeholder="Enter club name" required>
+                </div>
+                <div class="input-group">
+                    <label for="email-signup">Club Email</label>
+                    <input type="email" id="email-signup" placeholder="Enter club email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password-signup">Password</label>
+                    <input type="password" id="password-signup" placeholder="Create a password (min 6 characters)" required minlength="6">
+                </div>
+                <div class="input-group">
+                    <label for="signup-category">Category</label>
+                    <select id="signup-category" required>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Culturals">Cultural</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <p class="switch-link">Already have an account? <a href="#" onclick="toggleForm()">Login</a></p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
